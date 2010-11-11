@@ -46,8 +46,8 @@ local function CreateSubTypeList()
 	tinsert(list, { subtype = "walkthrough", label = L["Walkthrough Guide"],
 					texture = "Interface\\Icons\\Ability_Tracking", })
 					
-	tinsert(list, { subtype = "achievements", label = L["Achievements"],
-					texture = "Interface\\Icons\\Ability_Tracking", })
+	--tinsert(list, { subtype = "achievements", label = L["Achievements"],
+	--				texture = "Interface\\Icons\\Ability_Tracking", })
 	
 	WoWPro.Dungeons.SubTypeList = list
 end
@@ -325,6 +325,7 @@ function WoWPro.Dungeons.UpdateGuideList(scrollOffset)
 						row:Enable()
 					else
 						row:SetScript("OnClick", nil)
+						row:SetChecked(false)
 						row:Disable() -- TODO: disable row, check texture
 					end
 					
@@ -515,8 +516,10 @@ local function CreateRows(box, titlerow, scrollbar)
 		row:SetPoint("RIGHT", -4, 0)
 		row:SetHeight(ROWHEIGHT)
 
-		-- Text Settings --
+		-- Icon and Text Settings --
 		icon:SetPoint("TOPLEFT", prevrow.icon, "BOTTOMLEFT", 0, GAP)
+		icon:SetPoint("TOPRIGHT", prevrow.icon, "BOTTOMRIGHT", 0, GAP)
+		icon:SetHeight(ROWHEIGHT)
 		
 		dungeon:SetPoint("TOPLEFT", prevrow.dungeon, "BOTTOMLEFT", 0, GAP)
 		dungeon:SetPoint("TOPRIGHT", prevrow.dungeon, "BOTTOMRIGHT", 0, GAP)
