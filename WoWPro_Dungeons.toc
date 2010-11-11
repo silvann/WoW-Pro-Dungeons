@@ -1,0 +1,12 @@
+## Interface: 30300
+## Title: WoW-Pro Dungeons
+## Notes: Dungeon guides created by the WoW-Pro Community
+## Author: Silvann
+## Dependencies: WoWPro
+## Version: 0.0.1
+
+## X-Category: Quest
+
+WoWPro_Dungeons.lua
+WoWPro_Dungeons_Config.lua
+WoWPro_Dungeons_GuideList.lua
