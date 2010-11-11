@@ -46,8 +46,8 @@ local function CreateSubTypeList()
 	tinsert(list, { subtype = "walkthrough", label = L["Walkthrough Guide"],
 					texture = "Interface\\Icons\\Ability_Tracking", })
 					
-	--tinsert(list, { subtype = "achievements", label = L["Achievements"],
-	--				texture = "Interface\\Icons\\Ability_Tracking", })
+	tinsert(list, { subtype = "achievements", label = L["Achievements"],
+					texture = "Interface\\Icons\\Ability_Tracking", })
 	
 	WoWPro.Dungeons.SubTypeList = list
 end
@@ -452,9 +452,9 @@ local function CreateTitleRow(box, scrollbar)
 	
 	dungeon:SetPoint("LEFT", 0, -5)
 	dungeon:SetWidth(155)
-	range:SetPoint("LEFT", zone, "RIGHT", 0, 0)
+	range:SetPoint("LEFT", dungeon, "RIGHT", 0, 0)
 	range:SetWidth(50)
-	achievement:SetPoint("LEFT", author, "RIGHT", 0, 0)
+	achievement:SetPoint("LEFT", range, "RIGHT", 0, 0)
 	achievement:SetPoint("TOPRIGHT", scrollbar, "TOPLEFT", -5, 14)
 		
 	dungeon:SetText(L["Dungeon"])
