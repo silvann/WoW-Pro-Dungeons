@@ -416,6 +416,9 @@ function WoWPro.Dungeons.UpdateGuideList(scrollOffset)
 						row.subtypeicon:SetTexCoord(0, 1, 0, 1)
 					end
 					
+					row.subtypeicon:SetVertexColor(1, 1, 1)
+					row.subtype:SetVertexColor(1, 1, 1)
+					
 					row.icon:Hide()
 					row.dungeon:Hide()
 					row.range:Hide()
@@ -449,6 +452,8 @@ function WoWPro.Dungeons.UpdateGuideList(scrollOffset)
 					else
 						row:SetScript("OnClick", nil)
 						row:SetChecked(false)
+						row.subtypeicon:SetVertexColor(0.5, 0.5, 0.5)
+						row.subtype:SetVertexColor(0.5, 0.5, 0.5)
 						row:Disable() -- TODO: disable row, check texture
 					end
 					
