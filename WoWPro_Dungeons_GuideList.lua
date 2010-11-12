@@ -22,7 +22,7 @@ local function CreateSubTypeList()
 	if WoWPro.Dungeons.SubTypeList then return end
 	local list = {}
 	tinsert(list, { subtype = "location", label = L["Location"],
-					texture = "Interface\\Icons\\Ability_Tracking", })
+					texture = "Interface\\MINIMAP\\ROTATING-MINIMAPGUIDEARROW", })
 					
 	tinsert(list, { subtype = "questlist", label = L["Quest List"],
 					texture = "Interface\\GossipFrame\\AvailableQuestIcon", })
@@ -34,8 +34,8 @@ local function CreateSubTypeList()
 					texture = "Interface\\Icons\\Ability_Tracking", })
 					
 	tinsert(list, { subtype = "achievements", label = L["Achievements"],
-					texture = "Interface\\AchievementFrame\\UI-Achievement-TinyShield", })
-	
+					texture = "Interface\\ACHIEVEMENTFRAME\\UI-ACHIEVEMENT-SHIELDS-NOPOINTS", })
+					
 	WoWPro.Dungeons.SubTypeList = list
 end
 	
@@ -404,9 +404,17 @@ function WoWPro.Dungeons.UpdateGuideList(scrollOffset)
 					local subtype = SubTypeList[iSubType].subtype
 					local subtypeText = SubTypeList[iSubType].label
 					local texture = SubTypeList[iSubType].texture
-	
+					
 					row.subtypeicon:SetTexture(texture)
 					row.subtype:SetText(subtypeText)
+					
+					if subtype == "achievements" then
+						row.subtypeicon:SetTexCoord(0, 0.5, 0, 0.5)
+					elseif subtype == "location" then
+						row.subtypeicon:SetTexCoord(0.15, 0.85, 0.15, 0.85)
+					else
+						row.subtypeicon:SetTexCoord(0, 1, 0, 1)
+					end
 					
 					row.icon:Hide()
 					row.dungeon:Hide()
