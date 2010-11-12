@@ -15,21 +15,8 @@ local tsort = table.sort
 local EXPANSION_LEVEL = GetExpansionLevel();
 local TYPEID_DUNGEON = 1;
 local TYPEID_HEROIC_DIFFICULTY = 5;
-local print = WoWPro.Print
+--local wprint = WoWPro:Print
 local DungeonInfo = GetLFGDungeonInfo
-
---[[
--- Creating guide subtypes list
-WoWPro_Dungeons.SubTypeList = { "location", "questlist", "bosses",
-				 "walkthrough", }
-WoWPro_Dungeons.SubTypeNameList =
-{ ["location"] = "Location",
-  ["questlist"] = "Quest List",
-  ["bosses"] = "Boss Fights",
-  ["walkthrough"] = "Walkthrough Guide",
-  -- ["achievements"] = "Achievements",
-}
---]]
 
 local function CreateSubTypeList()
 	if WoWPro.Dungeons.SubTypeList then return end
@@ -46,8 +33,8 @@ local function CreateSubTypeList()
 	tinsert(list, { subtype = "walkthrough", label = L["Walkthrough Guide"],
 					texture = "Interface\\Icons\\Ability_Tracking", })
 					
-	--tinsert(list, { subtype = "achievements", label = L["Achievements"],
-	--				texture = "Interface\\Icons\\Ability_Tracking", })
+	tinsert(list, { subtype = "achievements", label = L["Achievements"],
+					texture = "Interface\\AchievementFrame\\UI-Achievement-TinyShield", })
 	
 	WoWPro.Dungeons.SubTypeList = list
 end
@@ -55,13 +42,141 @@ end
 	
 -- print dungeons names for debug and guide writing purposes
 function WoWPro.Dungeons.PrintDungeonList()
+	--print("Fail")
 	if not WoWPro.Dungeons.DungeonList then return end
-	print("Dungeons:")
-	print("level, name")
+	WoWPro:Print("Dungeons:")
+	WoWPro:Print("level, name")
 	for i=1,#WoWPro.Dungeons.DungeonList do
 		local name = WoWPro.Dungeons.DungeonList[i].name
 		local recLevel = WoWPro.Dungeons.DungeonList[i].recLevel
-		print(recLevel.." , "..name)
+		WoWPro:Print(recLevel.." , "..name)
+	end
+end
+
+local function UpdateGuideList()
+	return WoWPro.Dungeons.UpdateGuideList()
+end
+
+-- Sorting Functions --
+local function dungeonSortAsc(a,b)
+	return a.name < b.name
+end
+
+local function dungeonSortDesc(a,b)
+	return a.name > b.name
+end
+	
+local function dungeonSort()
+	if sorttype == "DungeonAsc" then
+		tsort(WoWPro.Dungeons.DungeonList, dungeonSortDesc)
+		UpdateGuideList()
+		sorttype = "DungeonDesc"
+	else
+		tsort(WoWPro.Dungeons.DungeonList, dungeonSortAsc)
+		UpdateGuideList()
+		sorttype = "DungeonAsc"
+	end
+end
+
+local function rangeSortAsc(a,b)
+	if a.recLevel == b.recLevel or a.recLevel < 1 or b.recLevel < 1 then
+		if a.minLevel == b.minLevel or a.minLevel < 1 or b.minLevel < 1 then
+			if a.maxLevel == b.maxLevel or a.maxLevel < 1 or b.maxLevel < 1 then
+				return a.name < b.name
+			else
+				return a.maxLevel < b.maxLevel
+			end
+		else
+			return a.minLevel < b.minLevel
+		end
+	else
+		return a.recLevel < b.recLevel 
+	end
+end
+
+local function rangeSortDesc(a,b)
+	if a.recLevel == b.recLevel or a.recLevel < 1 or b.recLevel < 1 then
+		if a.minLevel == b.minLevel or a.minLevel < 1 or b.minLevel < 1 then
+			if a.maxLevel == b.maxLevel or a.maxLevel < 1 or b.maxLevel < 1 then
+				return a.name < b.name
+			else
+				return a.maxLevel > b.maxLevel
+			end
+		else
+			return a.minLevel > b.minLevel
+		end
+	else
+		return a.recLevel > b.recLevel 
+	end
+end
+
+local function rangeSort()
+	if sorttype == "RangeAsc" then
+		tsort(WoWPro.Dungeons.DungeonList, rangeSortDesc)
+		UpdateGuideList()
+		sorttype = "RangeDesc"
+	else
+		tsort(WoWPro.Dungeons.DungeonList, rangeSortAsc)
+		UpdateGuideList()
+		sorttype = "RangeAsc"
+	end
+end
+
+local function achievementSortAsc(a,b)
+	local a_complete = a.achievement.current / a.achievement.total
+	local b_complete = b.achievement.current / b.achievement.total
+	
+	if a_complete == b_complete then
+		if a.recLevel == b.recLevel or a.recLevel < 1 or b.recLevel < 1 then
+			if a.minLevel == b.minLevel or a.minLevel < 1 or b.minLevel < 1 then
+				if a.maxLevel == b.maxLevel or a.maxLevel < 1 or b.maxLevel < 1 then
+					return a.name < b.name
+				else
+					return a.maxLevel < b.maxLevel
+				end
+			else
+				return a.minLevel < b.minLevel
+			end
+		else
+			return a.recLevel < b.recLevel 
+		end
+	else
+		return a_complete < b_complete
+	end
+end
+
+local function achievementSortDesc(a,b)
+	local a_complete = a.achievement.current / a.achievement.total
+	local b_complete = b.achievement.current / b.achievement.total
+	
+	if a_complete == b_complete then
+		if a.recLevel == b.recLevel or a.recLevel < 1 or b.recLevel < 1 then
+			if a.minLevel == b.minLevel or a.minLevel < 1 or b.minLevel < 1 then
+				if a.maxLevel == b.maxLevel or a.maxLevel < 1 or b.maxLevel < 1 then
+					return a.name < b.name
+				else
+					return a.maxLevel > b.maxLevel
+				end
+			else
+				return a.minLevel > b.minLevel
+			end
+		else
+			return a.recLevel > b.recLevel 
+		end
+	else
+		return a_complete > b_complete
+	end
+end
+
+local function achievementSort()
+	if sorttype == "AchievementAsc" then
+		tsort(WoWPro.Dungeons.DungeonList, achievementSortDesc)
+		UpdateGuideList()
+		sorttype = "AchievementDesc"
+	else
+		tsort(WoWPro.Dungeons.DungeonList, achievementSortAsc)
+		UpdateGuideList()
+		sorttype = "AchievementAsc"
 	end
 end
 
@@ -93,9 +208,9 @@ local function CreateDungeonList()
 		   		["achievement"] = { ["current"] = 1,
 		   				  ["total"] = 1, },
 		   	})
-		   	-- default sort: by recLevel
-		   	tsort(WoWPro.Dungeons.DungeonList, function(a,b) return a.recLevel < b.recLevel end)
-		   	sorttype = "AscDesc"
+		   	-- default, initial sort: by recLevel
+		   	tsort(WoWPro.Dungeons.DungeonList, rangeSortAsc)
+		   	sorttype = "RangeAsc"
 		end
 	end
 
@@ -351,57 +466,8 @@ function WoWPro.Dungeons.UpdateGuideList(scrollOffset)
 	end
 end
 
-local function UpdateGuideList()
-	return WoWPro.Dungeons.UpdateGuideList()
-end
 
--- Sorting Functions --
-	
-local function dungeonSort()
-	if sorttype == "DungeonAsc" then
-		tsort(WoWPro.Dungeons.DungeonList, function(a,b) return a.name > b.name end)
-		UpdateGuideList()
-		sorttype = "DungeonDesc"
-	else
-		tsort(WoWPro.Dungeons.DungeonList, function(a,b) return a.name < b.name end)
-		UpdateGuideList()
-		sorttype = "DungeonAsc"
-	end
-end
 
-local function rangeSort()
-	if sorttype == "RangeAsc" then
-		tsort(WoWPro.Dungeons.DungeonList, function(a,b) return a.recLevel > b.recLevel end)
-		UpdateGuideList()
-		sorttype = "RangeDesc"
-	else
-		tsort(WoWPro.Dungeons.DungeonList, function(a,b) return a.recLevel < b.recLevel end)
-		UpdateGuideList()
-		sorttype = "RangeAsc"
-	end
-end
-
-local function achievementSort()
-	if sorttype == "AchievementAsc" then
-		tsort(WoWPro.Dungeons.DungeonList, 
-			function(a,b)
-				local a_complete = a.achievement.current / a.achievement.total
-				local b_complete = b.achievement.current / b.achievement.total
-				return a_complete > b_complete 
-			end )
-		UpdateGuideList()
-		sorttype = "AchievementDesc"
-	else
-		tsort(WoWPro.Dungeons.DungeonList, 
-			function(a,b) 
-				local a_complete = a.achievement.current / a.achievement.total
-				local b_complete = b.achievement.current / b.achievement.total
-				return a_complete < b_complete 
-			end )
-		UpdateGuideList()
-		sorttype = "AchievementAsc"
-	end
-end
 	
 -- function to create the row of titles --
 local function CreateTitleRow(box, scrollbar)
