@@ -8,5 +8,11 @@
 ## X-Category: Quest
 
 WoWPro_Dungeons.lua
+
+test001_dungeon_guide.lua
+test002_dungeon_guide.lua
+
 WoWPro_Dungeons_Config.lua
 WoWPro_Dungeons_GuideList.lua
+WoWPro_Dungeons_Parser.lua
+

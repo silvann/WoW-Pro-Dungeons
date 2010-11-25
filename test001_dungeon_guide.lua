@@ -1,9 +1,9 @@
 -- general registering
 -- WoWPro_Dungeons:RegisterGuide("GuideID", "Dungeon, "Subtype", "Author", "Zone", "NextGuideID", "Faction", function()
 
-WoWPro_Dungeons:RegisterGuide("TestDung001", "Halls of Reflection", "questlist", "Silvann", "Icecrown", false, false, function()
+WoWPro_Dungeons:RegisterGuide("TestDung001", "Stratholme - Service Gate", "location", "Silvann", "Eastern Plaguelands", nil, nil, function()
 return [[
 
-L Kill Wolves and Troggs |QID|179| |M|30.19,73.96| |LVL|2| |N|Kill these until you are level 2.|
+R Go here |M|50.,50.| |N|Go here as a test| |Z|Stratholme|
 ]]
 end)
