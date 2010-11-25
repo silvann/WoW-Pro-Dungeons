@@ -1,3 +1,22 @@
+-- WoWPro.Dungeons.actionlabels = {
+	-- A = "Accept",
+	-- C = "Complete",
+	-- T = "Turn in",
+	-- K = "Kill",
+	-- R = "Run to",
+	-- H = "Hearth to",
+	-- h = "Set hearth to",
+	-- F = "Fly to",
+	-- f = "Get flight path for",
+	-- N = "Note:",
+	-- B = "Buy",
+	-- b = "Boat or Zeppelin",
+	-- U = "Use",
+	-- L = "Level",
+	-- l = "Loot",
+	-- r = "Repair/Restock"
+-- }
+
 ---------------------------------------------
 --      WoWPro_Dungeons_GuideList.lua      --
 ---------------------------------------------

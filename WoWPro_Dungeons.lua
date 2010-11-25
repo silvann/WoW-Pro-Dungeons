@@ -15,12 +15,13 @@ WoWPro.Dungeons.EventList = {
 		"MINIMAP_ZONE_CHANGED", "ZONE_CHANGED_NEW_AREA", "UI_INFO_MESSAGE", "CHAT_MSG_SYSTEM", "CHAT_MSG_LOOT",
 		"UPDATE_MOUSEOVER_UNIT",
 	}
-	
+
 function WoWPro.Dungeons:OnEnable()
 
 	WoWPro:dbp("|cff33ff33Enabled|r: Dungeons Module")
 	
-	-- WoWPro:RegisterTags({"QID", "questtext", "prereq", "noncombat", "leadin"})
+	WoWPro:RegisterTags({"QID", "questtext", "prereq", "noncombat", "leadin", "mode",
+						 "race", "class", "role", "minlevel"}) -- mode: normal or heroic
 	
 	WoWPro:RegisterEvents(WoWPro.Dungeons.EventList)
 	
