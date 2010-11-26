@@ -67,6 +67,7 @@ local function resetTable(tbl)
 	else
 		tbl = {}
 	end
+	return tbl
 end
 
 local function skipRecursive(index, steplist, GID)
@@ -143,9 +144,9 @@ end
 local function IsActionValid(action, subtypeGuide)
 	local SubTypeList = WoWPro.Dungeons.SubTypeList
 	local validActions
-	for i=1,#SubTypeList do
-		if SubTypeList.subtype == subtypeGuide then
-			validActions = SubTypeList.actions
+	for _,itype in pairs(SubTypeList) do
+		if itype.subtype == subtypeGuide then
+			validActions = itype.actions
 			break
 		end
 	end
@@ -162,9 +163,9 @@ end
 local function IsTagValid(tag, subtype)
 	local SubTypeList = WoWPro.Dungeons.SubTypeList
 	local validTags
-	for i=1,#SubTypeList do
-		if SubTypeList.subtype == subtypeGuide then
-			validTags = SubTypeList.tags
+	for _,itype in pairs(SubTypeList) do
+		if itype.subtype == subtypeGuide then
+			validTags = itype.tags
 			break
 		end
 	end
@@ -190,6 +191,7 @@ function WoWPro.Dungeons.ParseGuide(GID, ...)
 		local text = select(j, ...)
 		if text ~= "" then
 			_, _, WoWPro.action[i], WoWPro.step[i] = text:find("^(%a) ([^|]*)(.*)")
+			--print(WoWPro.action[i], WoWPro.step[i], subtypeguide)
 			
 			if IsActionValid(WoWPro.action[i], subtypeguide) and WoWPro.step[i] then
 				-- first tags that exist for all guide types
@@ -303,6 +305,10 @@ function WoWPro.Dungeons:LoadGuide()
 	WoWPro.Dungeons.ParseGuide(GID, string.split("\n", sequence()))
 	
 	WoWPro:dbp("Guide Parsed. "..WoWPro.stepcount.." steps registered.")
+	
+	WoWPro.Dungeons.db.guide[GID] = WoWPro.Dungeons.db.guide[GID] or {}
+	WoWPro.Dungeons.db.guide[GID].completion = WoWPro.Dungeons.db.guide[GID].completion or {}
+	WoWPro.Dungeons.db.guide[GID].skipped = WoWPro.Dungeons.db.guide[GID].skipped or {}
 		
 	WoWPro.Dungeons:PopulateQuestLog() --Calling this will populate our quest log table for use here
 	
@@ -352,7 +358,7 @@ function WoWPro.Dungeons:RowUpdate(offset)
 	if InCombatLockdown() or not GID or not WoWPro.Guides[GID] then 
 		return 
 	end
-	local numRows = WoWPro.ShownRows -- trying with shownrows instead of all 15 rows - will prolly not work due to resize
+	local numRows = 15 -- trying with shownrows instead of all 15 rows - will prolly not work due to resize
 										-- then use #WoWPro.rows instead
 	local numSteps = WoWPro.stepcount
 	local i = 1
@@ -367,7 +373,7 @@ function WoWPro.Dungeons:RowUpdate(offset)
 	local itemkb = false
 	local targetkb = false
 	ClearOverrideBindings(WoWPro.MainFrame)
-	resetTable(WoWPro.Dungeons.RowDropdownMenu)
+	WoWPro.Dungeons.RowDropdownMenu = resetTable(WoWPro.Dungeons.RowDropdownMenu)
 	
 	for k=initialk,numSteps do
 			
@@ -459,6 +465,12 @@ function WoWPro.Dungeons:RowUpdate(offset)
 			if WoWPro.prof[k] then
 				local prof, proflvl = string.split(" ", WoWPro.prof[k]) 
 			end
+			
+			-- skippedQID, if step is QID
+			local skippedQID = false
+			if QID then
+				skippedQID = WoWPro.Dungeons.db.skippedQIDs[WoWPro.QID[k]]
+			end
 		
 			-- Getting the image and text for the step --
 			row.step:SetText(step)
@@ -470,9 +482,9 @@ function WoWPro.Dungeons:RowUpdate(offset)
 				row.check:Hide() 
 			end
 			-- check setting
-			if completion[k] or WoWPro.Dungeons.db.guide[GID].skipped[k] or WoWPro.Dungeons.db.skippedQIDs[WoWPro.QID[k]] then
+			if completion[k] or WoWPro.Dungeons.db.guide[GID].skipped[k] or skippedQID then
 				row.check:SetChecked(true)
-				if WoWPro.Dungeons.db.guide[GID].skipped[k] or WoWPro.Dungeons.db.skippedQIDs[WoWPro.QID[k]] then
+				if WoWPro.Dungeons.db.guide[GID].skipped[k] or skippedQID then
 					row.check:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled")
 				else
 					row.check:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check")
@@ -662,7 +674,7 @@ function WoWPro.Dungeons:RowUpdate(offset)
 		
 			-- move to next row, next step
 			i = i + 1
-			k = k + 1
+			break
 		end
 	end
 	
@@ -693,7 +705,7 @@ function WoWPro.Dungeons:EventHandler(self, event, ...)
 
 	-- Receiving the result of the completed quest query --
 	if event == "QUEST_QUERY_COMPLETE" then
-		resetTable(WoWPro.Dungeons.db.completedQIDs)
+		WoWPro.Dungeons.db.completedQIDs = resetTable(WoWPro.Dungeons.db.completedQIDs)
 		GetQuestsCompleted(WoWPro.Dungeons.db.completedQIDs)
 		WoWPro.UpdateGuide()
 	end
@@ -757,7 +769,7 @@ function WoWPro.Dungeons:PopulateQuestLog()
 	WoWPro.newQuest, WoWPro.missingQuest = false, false
 	
 	-- Generating the Quest Log table --
-	resetTable(WoWPro.QuestLog) -- Reinitiallizing the Quest Log table
+	WoWPro.QuestLog = resetTable(WoWPro.QuestLog) -- Reinitiallizing the Quest Log table
 	local i, currentHeader = 1, "None"
 	local entries = GetNumQuestLogEntries()
 	for i=1,tonumber(entries) do
@@ -1034,7 +1046,7 @@ function WoWPro.Dungeons:NextStep(k, skip)
 	local GID = WoWProDB.char.currentguide
 
 	-- Optional Quests --
-	if WoWPro.optional[k] and WoWPro.QID[k] then 
+	if WoWPro.optional[k] and WoWPro.QID[k] then --check this, could be optional non-quest related
 		
 		-- Checking Quest Log --
 		if WoWPro.QuestLog[WoWPro.QID[k]] then 

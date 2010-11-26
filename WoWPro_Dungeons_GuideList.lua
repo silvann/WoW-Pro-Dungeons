@@ -41,10 +41,20 @@ local function CreateSubTypeList()
 	if WoWPro.Dungeons.SubTypeList then return end
 	local list = {}
 	tinsert(list, { subtype = "location", label = L["Location"],
-					texture = "Interface\\MINIMAP\\ROTATING-MINIMAPGUIDEARROW", })
+					texture = "Interface\\MINIMAP\\ROTATING-MINIMAPGUIDEARROW", 
+					actions = {"R", },
+					tags = { "action", "step", "note", "index", "map", "sticky", 
+							"unsticky", "use", "zone", "lootitem", "lootqty", "optional", 
+							"level", "target", "prof", "rep", "waypcomplete", "rank",  }
+					})
 					
 	tinsert(list, { subtype = "questlist", label = L["Quest List"],
-					texture = "Interface\\GossipFrame\\AvailableQuestIcon", })
+					texture = "Interface\\GossipFrame\\AvailableQuestIcon", 
+					actions = {"A", "C", },
+					tags = { "action", "step", "note", "index", "map", "sticky", 
+							"unsticky", "use", "zone", "lootitem", "lootqty", "optional", 
+							"level", "target", "prof", "rep", "waypcomplete", "rank",  }
+					})
 					
 	tinsert(list, { subtype = "bosses", label = L["Boss Fights"],
 					texture = "Interface\\Icons\\Ability_Creature_Cursed_02", })

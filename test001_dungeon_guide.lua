@@ -5,5 +5,6 @@ WoWPro.Dungeons:RegisterGuide("TestDung001", "Stratholme - Service Entrance", "l
 return [[
 
 R Go here |M|50.,50.| |N|Go here as a test| |Z|Stratholme|
+
 ]]
 end)
