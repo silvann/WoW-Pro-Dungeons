@@ -1,4 +1,4 @@
-## Interface: 30300
+## Interface: 40000
 ## Title: WoW-Pro Dungeons
 ## Notes: Dungeon guides created by the WoW-Pro Community
 ## Author: Silvann
@@ -13,6 +13,5 @@ test001_dungeon_guide.lua
 test002_dungeon_guide.lua
 
 WoWPro_Dungeons_Config.lua
-WoWPro_Dungeons_GuideList.lua
 WoWPro_Dungeons_Parser.lua
-
+WoWPro_Dungeons_GuideList.lua

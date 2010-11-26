@@ -5,7 +5,6 @@
 local L = WoWPro_Locale
 local tinsert = table.insert
 local safecall = pcall
-local SubTypeList = WoWPro.Dungeons.SubTypeList
 local myclass, myrace = UnitClass("player"), UnitRace("player")
 
 
@@ -142,6 +141,7 @@ end
 -- utils
 
 local function IsActionValid(action, subtypeGuide)
+	local SubTypeList = WoWPro.Dungeons.SubTypeList
 	local validActions
 	for i=1,#SubTypeList do
 		if SubTypeList.subtype == subtypeGuide then
@@ -150,7 +150,7 @@ local function IsActionValid(action, subtypeGuide)
 		end
 	end
 	if action and validActions then
-		for _,valid in pairs validActions do
+		for _,valid in pairs(validActions) do
 			if action == valid then
 				return true
 			end
@@ -160,6 +160,7 @@ local function IsActionValid(action, subtypeGuide)
 end
 
 local function IsTagValid(tag, subtype)
+	local SubTypeList = WoWPro.Dungeons.SubTypeList
 	local validTags
 	for i=1,#SubTypeList do
 		if SubTypeList.subtype == subtypeGuide then
@@ -168,7 +169,7 @@ local function IsTagValid(tag, subtype)
 		end
 	end
 	if tag and validTags then
-		for _,valid in pairs validTags do
+		for _,valid in pairs(validTags) do
 			if tag == valid then
 				return true
 			end
@@ -268,7 +269,7 @@ function WoWPro.Dungeons.ParseGuide(GID, ...)
 				if IsTagValid("race", subtypeguide) then
 					WoWPro.class[i], WoWPro.race[i] = text:match("|C|([^|]*)|?"), text:match("|R|([^|]*)|?")
 					local ok, role = safecall(strupper, text:match("|ROLE|([^|]*)|?"))
-					if ok and role and ( role ~= "HEALER" or ~= "TANK" or role ~= "DPS" ) then
+					if ok and role and ( role ~= "HEALER" or role ~= "TANK" or role ~= "DPS" ) then
 						WoWPro.role[i] = role
 					end
 				end
@@ -392,7 +393,7 @@ function WoWPro.Dungeons:RowUpdate(offset)
 			local unsticky = WoWPro.unsticky[k]
 			if unsticky and i == WoWPro.ActiveStickyCount+1 then
 				local nextstep = false
-				for j=1,numRows in ipairs() do 
+				for j=1,numRows do 
 					if step == WoWPro.rows[j].step:GetText() and WoWPro.sticky[WoWPro.rows[j].index] then 
 						completion[WoWPro.rows[j].index] = true
 						nextstep = true
