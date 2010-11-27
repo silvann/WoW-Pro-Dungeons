@@ -358,11 +358,11 @@ function WoWPro.Dungeons:RowUpdate(offset)
 	if InCombatLockdown() or not GID or not WoWPro.Guides[GID] then 
 		return 
 	end
-	local numRows = 15 -- trying with shownrows instead of all 15 rows - will prolly not work due to resize
-										-- then use #WoWPro.rows instead
-	local numSteps = WoWPro.stepcount
+	local numRows = #WoWPro.rows
+	local numSteps = max(numRows, WoWPro.stepcount)
 	local i = 1
 	
+	-- TODO
 	-- local mylevel = getplayerlevel
 	-- local myrole = getplayerrole (a function: if player in dungeon or not)
 	-- local dungeonMode = getdungeonMode (a function: if player in dungeon or not)
@@ -531,42 +531,42 @@ function WoWPro.Dungeons:RowUpdate(offset)
 			-- TODO: Try to change all these, wihtout using easymenu
 			-- Right-Click Drop-Down --
 			local dropdown = {}
-			-- if step then
-			table.insert(dropdown, {text = step.." Options", isTitle = true})
-			-- trust in MapPoint
-			-- QuestMapUpdateAllQuests()
-			-- QuestPOIUpdateIcons()
-			-- local _, x, y, obj
-			-- if QID then _, x, y, obj = QuestPOIGetIconInfo(QID) end
-			-- if coord or x then
-			table.insert(dropdown, {text = "Map Coordinates", 	func = function()
-																WoWPro:MapPoint(row.num) end} )
-			-- end
-			-- setting up party options
-			if GetNumPartyMembers() > 0 then
-				if QID and WoWPro.QuestLog[QID] and WoWPro.QuestLog[QID].index then
-					table.insert(dropdown, {text = "Share Quest", func = function()
-											QuestLogPushQuest(WoWPro.QuestLog[QID].index) end} )
+			if step then
+				table.insert(dropdown, {text = step.." Options", isTitle = true})
+				-- trust in MapPoint
+				-- QuestMapUpdateAllQuests()
+				-- QuestPOIUpdateIcons()
+				-- local _, x, y, obj
+				-- if QID then _, x, y, obj = QuestPOIGetIconInfo(QID) end
+				-- if coord or x then
+				table.insert(dropdown, {text = "Map Coordinates", 	func = function()
+																	WoWPro:MapPoint(row.num) end} )
+				--end
+				-- setting up party options
+				if GetNumPartyMembers() > 0 then
+					if QID and WoWPro.QuestLog[QID] and WoWPro.QuestLog[QID].index then
+						table.insert(dropdown, {text = "Share Quest", func = function()
+												QuestLogPushQuest(WoWPro.QuestLog[QID].index) end} )
+					end
+					-- TODO: setup share step with party
 				end
-				-- TODO: setup share step with party
+				if sticky then
+					table.insert(dropdown, {text = "Un-Sticky", func = function() 
+											WoWPro.sticky[row.index] = false
+											WoWPro.UpdateGuide()
+											WoWPro.UpdateGuide() -- why 2 updates??
+											WoWPro.MapPoint()
+											end} )
+				else
+					table.insert(dropdown, {text = "Make Sticky", func = function() 
+											WoWPro.sticky[row.index] = true
+											WoWPro.unsticky[row.index] = false
+											WoWPro.UpdateGuide()
+											WoWPro.UpdateGuide() -- again, why 2 updates
+											WoWPro.MapPoint()
+											end} )
+				end
 			end
-			if sticky then
-				table.insert(dropdown, {text = "Un-Sticky", func = function() 
-										WoWPro.sticky[row.index] = false
-										WoWPro.UpdateGuide()
-										WoWPro.UpdateGuide() -- why 2 updates??
-										WoWPro.MapPoint()
-										end} )
-			else
-				table.insert(dropdown, {text = "Make Sticky", func = function() 
-										WoWPro.sticky[row.index] = true
-										WoWPro.unsticky[row.index] = false
-										WoWPro.UpdateGuide()
-										WoWPro.UpdateGuide() -- again, why 2 updates
-										WoWPro.MapPoint()
-										end} )
-			end
-		--end
 			WoWPro.Dungeons.RowDropdownMenu[i] = dropdown
 		
 			-- Item Button --
@@ -671,7 +671,7 @@ function WoWPro.Dungeons:RowUpdate(offset)
 			end
 
 			WoWPro.rows[i] = row
-		
+			
 			-- move to next row, next step
 			i = i + 1
 			break

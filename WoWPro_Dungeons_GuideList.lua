@@ -50,7 +50,7 @@ local function CreateSubTypeList()
 					
 	tinsert(list, { subtype = "questlist", label = L["Quest List"],
 					texture = "Interface\\GossipFrame\\AvailableQuestIcon", 
-					actions = {"A", "C", },
+					actions = {"A", "C", "T", },
 					tags = { "action", "step", "note", "index", "map", "sticky", 
 							"unsticky", "use", "zone", "lootitem", "lootqty", "optional", 
 							"level", "target", "prof", "rep", "waypcomplete", "rank",  }
