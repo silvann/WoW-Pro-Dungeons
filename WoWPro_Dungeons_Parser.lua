@@ -24,7 +24,8 @@ WoWPro.Dungeons.actiontypes = {
 	U = "Interface\\Icons\\INV_Misc_Bag_08",
 	L = "Interface\\Icons\\Spell_ChargePositive",
 	l = "Interface\\Icons\\INV_Misc_Bag_08",
-	r = "Interface\\Icons\\Ability_Repair"
+	r = "Interface\\Icons\\Ability_Repair",
+	S = -- spell/ability
 }
 WoWPro.Dungeons.actionlabels = {
 	A = "Accept",
@@ -42,7 +43,8 @@ WoWPro.Dungeons.actionlabels = {
 	U = "Use",
 	L = "Level",
 	l = "Loot",
-	r = "Repair/Restock"
+	r = "Repair/Restock",
+	S = -- spell/ability
 }
 
 -- util
@@ -985,6 +987,7 @@ function WoWPro.Dungeons:UpdateQuestTracker()
 		local index = row.index
 		local questtext = WoWPro.questtext[index] 
 		local action = WoWPro.action[index] 
+
 		local lootitem = WoWPro.lootitem[index] 
 		local lootqty = WoWPro.lootqty[index] 
 		local QID = WoWPro.QID[index]

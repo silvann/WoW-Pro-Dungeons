@@ -1,22 +1,3 @@
--- WoWPro.Dungeons.actionlabels = {
-	-- A = "Accept",
-	-- C = "Complete",
-	-- T = "Turn in",
-	-- K = "Kill",
-	-- R = "Run to",
-	-- H = "Hearth to",
-	-- h = "Set hearth to",
-	-- F = "Fly to",
-	-- f = "Get flight path for",
-	-- N = "Note:",
-	-- B = "Buy",
-	-- b = "Boat or Zeppelin",
-	-- U = "Use",
-	-- L = "Level",
-	-- l = "Loot",
-	-- r = "Repair/Restock"
--- }
-
 ---------------------------------------------
 --      WoWPro_Dungeons_GuideList.lua      --
 ---------------------------------------------
@@ -39,31 +20,47 @@ local DungeonInfo = GetLFGDungeonInfo
 
 local function CreateSubTypeList()
 	if WoWPro.Dungeons.SubTypeList then return end
+	local allTags = WoWPro.Tags
+	local actionlabels = WoWPro.Dungeons.actionlabels
+	local allActions = {}
+	for k,_ in pairs(actionlabels) do
+		tinsert(allActions, k)
+	end
+	
 	local list = {}
 	tinsert(list, { subtype = "location", label = L["Location"],
 					texture = "Interface\\MINIMAP\\ROTATING-MINIMAPGUIDEARROW", 
-					actions = {"R", },
-					tags = { "action", "step", "note", "index", "map", "sticky", 
-							"unsticky", "use", "zone", "lootitem", "lootqty", "optional", 
-							"level", "target", "prof", "rep", "waypcomplete", "rank",  }
+					actions = {"R", "F", "N", "b",},
+					tags = { "action", "step", "note", "index", "map", "zone", 
+						 "waypcomplete", "ghost", }
 					})
 					
 	tinsert(list, { subtype = "questlist", label = L["Quest List"],
 					texture = "Interface\\GossipFrame\\AvailableQuestIcon", 
-					actions = {"A", "C", "T", },
-					tags = { "action", "step", "note", "index", "map", "sticky", 
-							"unsticky", "use", "zone", "lootitem", "lootqty", "optional", 
-							"level", "target", "prof", "rep", "waypcomplete", "rank",  }
+					actions = {"A", "T", "R", "F", "N", "b" },
+					tags = { "action", "step", "note", "index", "map", "use", "zone",
+						 "QID", "prereq", "leadin", "optional", "minlevel", "prof", 
+						 "race", "class", "role", "mode", "rep", "waypcomplete", }
 					})
 					
 	tinsert(list, { subtype = "bosses", label = L["Boss Fights"],
-					texture = "Interface\\Icons\\Ability_Creature_Cursed_02", })
+					texture = "Interface\\Icons\\Ability_Creature_Cursed_02",
+					actions = {"K", "R", "N", "U", "l", "S", },
+					tags = { "action", "step", "note", "index", "map", "zone", 
+						 "waypcomplete", "use", "prof", "race", "class", "role", "mode" }
+					})
 					
 	tinsert(list, { subtype = "walkthrough", label = L["Walkthrough Guide"],
-					texture = "Interface\\Icons\\Ability_Tracking", })
+					texture = "Interface\\Icons\\Ability_Tracking", 
+					actions = allActions,
+					tags = allTags
+					})
 					
 	tinsert(list, { subtype = "achievements", label = L["Achievements"],
-					texture = "Interface\\ACHIEVEMENTFRAME\\UI-ACHIEVEMENT-SHIELDS-NOPOINTS", })
+					texture = "Interface\\ACHIEVEMENTFRAME\\UI-ACHIEVEMENT-SHIELDS-NOPOINTS", 
+					actions = allActions,
+					tags = allTags
+					})
 					
 	WoWPro.Dungeons.SubTypeList = list
 end

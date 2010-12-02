@@ -21,7 +21,7 @@ function WoWPro.Dungeons:OnEnable()
 	WoWPro:dbp("|cff33ff33Enabled|r: Dungeons Module")
 	
 	WoWPro:RegisterTags({"QID", "questtext", "prereq", "noncombat", "leadin", "mode",
-						 "race", "class", "role", "minlevel"}) -- mode: normal or heroic
+			     "prof", "race", "class", "role", "minlevel", "ghost", }) -- mode: normal or heroic
 	
 	WoWPro:RegisterEvents(WoWPro.Dungeons.EventList)
 	
