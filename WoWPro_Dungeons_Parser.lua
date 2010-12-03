@@ -25,7 +25,7 @@ WoWPro.Dungeons.actiontypes = {
 	L = "Interface\\Icons\\Spell_ChargePositive",
 	l = "Interface\\Icons\\INV_Misc_Bag_08",
 	r = "Interface\\Icons\\Ability_Repair",
-	S = -- spell/ability
+	S = "Interface\\Icons\\Ability_Repair", -- TODO: spell/ability
 }
 WoWPro.Dungeons.actionlabels = {
 	A = "Accept",
@@ -44,7 +44,7 @@ WoWPro.Dungeons.actionlabels = {
 	L = "Level",
 	l = "Loot",
 	r = "Repair/Restock",
-	S = -- spell/ability
+	S = "Spell", -- spell/ability
 }
 
 -- util
@@ -412,7 +412,7 @@ function WoWPro.Dungeons:RowUpdate(offset)
 				end
 			end
 			
-			-- show/hide steps depending of options
+			-- show/hide steps depending on options
 			-- regarding race
 			local race = WoWPro.race[k]
 			if race and race ~= myrace and WoWPro.Dungeons.db.filterRace then
@@ -678,6 +678,18 @@ function WoWPro.Dungeons:RowUpdate(offset)
 			i = i + 1
 			break
 		end
+	end
+	
+	-- hiding/setting nil when end of guide
+	-- when number of rows > number of steps minus current step
+	for j=i,numRows do
+		WoWPro.rows[j].step:SetText()
+		WoWPro.rows[j].check:Hide()
+		WoWPro.rows[j].note:SetText()
+		WoWPro.rows[j].action:SetTexture()
+		WoWPro.Dungeons.RowDropdownMenu[j] = nil
+		WoWPro.rows[j].itembutton:Hide() 
+		WoWPro.rows[j].targetbutton:Hide()
 	end
 	
 	WoWPro.ActiveStickyCount = WoWPro.ActiveStickyCount or 0
